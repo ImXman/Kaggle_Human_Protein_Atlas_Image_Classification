@@ -15,7 +15,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.models import Model
 from tensorflow.keras import backend as K
-#from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model
 from tensorflow.keras.layers import Dense,Input,Conv2D
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import ReduceLROnPlateau, LearningRateScheduler
@@ -96,7 +96,9 @@ x = Conv2D(3, kernel_size=(1, 1),strides=(1, 1),
            padding='valid',activation="relu")(inputs)
 x = densenet(x)
 outputs = Dense(28,activation="softmax")(x)
-densenet_hpa = Model(inputs, outputs)
+#densenet_hpa = Model(inputs, outputs)
+
+densenet_hpa = load_model("best_model.hdf5",custom_objects={'CRL': CRL})
 
 def lr_schedule(epoch):
     """Learning Rate Schedule
@@ -110,7 +112,7 @@ def lr_schedule(epoch):
     # Returns
         lr (float32): learning rate
     """
-    lr = 1e-3
+    lr = 1e-2
     if epoch > 300:
         lr *= 0.5e-3
     elif epoch > 200:
@@ -180,7 +182,7 @@ validation_batches = (
     .batch(2*batch_size)
     )
 
-history = densenet_hpa.fit(augmented_train_batches, epochs=100,
+history = densenet_hpa.fit(augmented_train_batches, epochs=10,
                            validation_data=validation_batches,
                            callbacks = [checkpoint,lr_reducer, lr_scheduler])
 
