@@ -139,7 +139,7 @@ densenet_hpa.compile(optimizer='adam',
                      loss=CRL,
                      metrics=[f1])
 
-y = pd.read_csv("train.csv")
+y = pd.read_csv("HPA_train.csv")
 ids = y['Id'].values.tolist()
 targets = y['Target'].values.tolist()
 def split(string):
