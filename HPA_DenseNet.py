@@ -64,7 +64,8 @@ def CRL(yTrue,yPred):
     competing ratio loss
     dicrimitive function
     '''
-    cel = -K.sum(yTrue*K.log(yPred),axis=1)
+    #cel = -K.sum(yTrue*K.log(yPred),axis=1)
+    cel = -K.log(K.sum(yTrue*yPred,axis=1))
     ##beta = 1 and alpha = 1.5
     ratio = 1*K.log(1.5+K.sum(K.abs(yTrue-1)*yPred,axis=1))
     #crl = cel+ratio
@@ -158,7 +159,7 @@ X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_siz
 Train = tf.data.Dataset.from_tensor_slices((X_train, y_train))
 Valid = tf.data.Dataset.from_tensor_slices((X_valid, y_valid))
 
-batch_size = 64
+batch_size = 128
 num_train_samples = len(X_train)
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
