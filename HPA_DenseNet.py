@@ -21,7 +21,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import ReduceLROnPlateau, LearningRateScheduler
 
 def load_image(path,label):
-    files = "human-protein-atlas-image-classification/train/"+path
+    files = "train/"+path
     f = files + '_red.png'
     R = tf.io.read_file(f)
     R = tf.image.decode_png(R, channels=1)
@@ -139,7 +139,7 @@ densenet_hpa.compile(optimizer='adam',
                      loss=CRL,
                      metrics=[f1])
 
-y = pd.read_csv("HPA_train.csv")
+y = pd.read_csv("train.csv")
 ids = y['Id'].values.tolist()
 targets = y['Target'].values.tolist()
 def split(string):
@@ -159,7 +159,7 @@ X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_siz
 Train = tf.data.Dataset.from_tensor_slices((X_train, y_train))
 Valid = tf.data.Dataset.from_tensor_slices((X_valid, y_valid))
 
-batch_size = 128
+batch_size = 64
 num_train_samples = len(X_train)
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
