@@ -15,13 +15,13 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.models import Model
 from tensorflow.keras import backend as K
-from tensorflow.keras.models import load_model
+#from tensorflow.keras.models import load_model
 from tensorflow.keras.layers import Dense,Input,Conv2D
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import ReduceLROnPlateau, LearningRateScheduler
 
 def load_image(path,label):
-    files = "Human_Protein_Atlas/"+path
+    files = "human-protein-atlas-image-classification/train/"+path
     f = files + '_red.png'
     R = tf.io.read_file(f)
     R = tf.image.decode_png(R, channels=1)
@@ -96,9 +96,7 @@ x = Conv2D(3, kernel_size=(1, 1),strides=(1, 1),
            padding='valid',activation="relu")(inputs)
 x = densenet(x)
 outputs = Dense(28,activation="softmax")(x)
-#densenet_hpa = Model(inputs, outputs)
-
-densenet_hpa = load_model("best_model.hdf5",custom_objects={'CRL': CRL})
+densenet_hpa = Model(inputs, outputs)
 
 def lr_schedule(epoch):
     """Learning Rate Schedule
@@ -182,14 +180,14 @@ validation_batches = (
     .batch(2*batch_size)
     )
 
-history = densenet_hpa.fit(augmented_train_batches, epochs=10,
+history = densenet_hpa.fit(augmented_train_batches, epochs=100,
                            validation_data=validation_batches,
                            callbacks = [checkpoint,lr_reducer, lr_scheduler])
 
-history = pd.DataFrame(history)
-history.to_csv("./training_history.csv")
-np.savetxt("./test_filenames.txt",np.array(X_test),delimiter="\t",fmt="%s")
-np.savetxt("./test_target.txt",np.array(y_test),delimiter="\t",fmt="%i")
+#history = pd.DataFrame(history)
+#history.to_csv("training_history.csv")
+np.savetxt("test_filenames.txt",np.array(X_test),delimiter="\t",fmt="%s")
+np.savetxt("test_target.txt",np.array(y_test),delimiter="\t",fmt="%i")
 #X_test = None
 #model = load_model("best_model.hdf5",custom_objects={'CRL': CRL})
 #y_pred = model.predict(X_test)
