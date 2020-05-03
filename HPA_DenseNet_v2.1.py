@@ -122,7 +122,7 @@ x = Dense(128,activation="relu")(x)
 outputs = Dense(28,activation="softmax",name="Classifier")(x)
 centers = CenterLossLayer(alpha=0.5,name="Centerloss")([x, label_inputs])
 densenet_hpa = Model(inputs=[inputs,label_inputs], outputs=[outputs,centers])
-densenet_hpa.load_weights('./best_checkpoint')
+#densenet_hpa.load_weights('./best_checkpoint')
 densenet_hpa.compile(optimizer="adam",
                      loss=[CRL,center_loss],
                      loss_weights=[1, 0.0001],
